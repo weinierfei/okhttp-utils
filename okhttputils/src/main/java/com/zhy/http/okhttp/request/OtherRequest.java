@@ -16,13 +16,15 @@ import okhttp3.internal.http.HttpMethod;
  * Created by zhy on 16/2/23.
  */
 public class OtherRequest extends OkHttpRequest {
-    private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
+
+//    private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
+    private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("application/json;charset=utf-8");
 
     private RequestBody requestBody;
     private String method;
     private String content;
 
-    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, String> params, Map<String, String> headers) {
+    public OtherRequest(RequestBody requestBody, String content, String method, String url, Object tag, Map<String, Object> params, Map<String, String> headers) {
         super(url, tag, params, headers);
         this.requestBody = requestBody;
         this.method = method;

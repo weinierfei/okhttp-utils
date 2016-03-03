@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
             return;
         }
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("username", "张鸿洋");
         params.put("password", "123");
 
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "文件不存在，请修改文件路径", Toast.LENGTH_SHORT).show();
             return;
         }
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("username", "张鸿洋");
         params.put("password", "123");
 

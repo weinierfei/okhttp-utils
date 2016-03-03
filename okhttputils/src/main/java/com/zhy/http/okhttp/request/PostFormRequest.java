@@ -1,5 +1,6 @@
 package com.zhy.http.okhttp.request;
 
+import com.google.gson.GsonBuilder;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
@@ -20,9 +21,10 @@ import okhttp3.RequestBody;
  * Created by zhy on 15/12/14.
  */
 public class PostFormRequest extends OkHttpRequest {
+
     private List<PostFormBuilder.FileInput> files;
 
-    public PostFormRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files) {
+    public PostFormRequest(String url, Object tag, Map<String, Object> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files) {
         super(url, tag, params, headers);
         this.files = files;
     }
@@ -83,7 +85,8 @@ public class PostFormRequest extends OkHttpRequest {
     private void addParams(MultipartBody.Builder builder) {
         if (params != null && !params.isEmpty()) {
             for (String key : params.keySet()) {
-                builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + key + "\""), RequestBody.create(null, params.get(key)));
+                String jsonParam = new GsonBuilder().create().toJson(params);
+                builder.addPart(Headers.of("Content-Disposition", "form-data; name=\"" + key + "\""), RequestBody.create(null, jsonParam));
             }
         }
     }
@@ -91,7 +94,8 @@ public class PostFormRequest extends OkHttpRequest {
     private void addParams(FormBody.Builder builder) {
         if (params != null) {
             for (String key : params.keySet()) {
-                builder.add(key, params.get(key));
+                String jsonParam = new GsonBuilder().create().toJson(params);
+                builder.add(key, jsonParam);
             }
         }
     }

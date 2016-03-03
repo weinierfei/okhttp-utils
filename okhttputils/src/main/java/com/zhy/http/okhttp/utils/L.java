@@ -6,11 +6,17 @@ import android.util.Log;
  * Created by zhy on 15/11/6.
  */
 public class L {
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     public static void e(String msg) {
         if (debug) {
             Log.e("OkHttp", msg);
+        }
+    }
+
+    public static void i(String msg) {
+        if (debug) {
+            Log.i("OkHttp", msg);
         }
     }
 

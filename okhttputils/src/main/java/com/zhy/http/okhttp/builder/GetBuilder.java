@@ -1,10 +1,13 @@
 package com.zhy.http.okhttp.builder;
 
+import com.zhy.http.okhttp.callback.StringCallback;
 import com.zhy.http.okhttp.request.GetRequest;
 import com.zhy.http.okhttp.request.RequestCall;
+import com.zhy.http.okhttp.utils.ParamUtil;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by zhy on 15/12/14.
@@ -13,13 +16,14 @@ public class GetBuilder extends OkHttpRequestBuilder implements HasParamsable {
     @Override
     public RequestCall build() {
         if (params != null) {
-            url = appendParams(url, params);
+//            url = appendParams(url, params);
+            url = ParamUtil.appendParams(url,params);
         }
-
         return new GetRequest(url, tag, params, headers).build();
     }
 
-    protected String appendParams(String url, Map<String, String> params) {
+
+    protected String appendParams(String url, Map<String, Object> params) {
         StringBuilder sb = new StringBuilder();
         sb.append(url + "?");
         if (params != null && !params.isEmpty()) {
@@ -45,13 +49,13 @@ public class GetBuilder extends OkHttpRequestBuilder implements HasParamsable {
     }
 
     @Override
-    public GetBuilder params(Map<String, String> params) {
+    public GetBuilder params(Map<String, Object> params) {
         this.params = params;
         return this;
     }
 
     @Override
-    public GetBuilder addParams(String key, String val) {
+    public GetBuilder addParams(String key, Object val) {
         if (this.params == null) {
             params = new LinkedHashMap<>();
         }

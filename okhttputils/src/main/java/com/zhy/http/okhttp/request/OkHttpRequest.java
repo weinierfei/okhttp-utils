@@ -15,12 +15,12 @@ import okhttp3.RequestBody;
 public abstract class OkHttpRequest {
     protected String url;
     protected Object tag;
-    protected Map<String, String> params;
+    protected Map<String, Object> params;
     protected Map<String, String> headers;
 
     protected Request.Builder builder = new Request.Builder();
 
-    protected OkHttpRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers) {
+    protected OkHttpRequest(String url, Object tag, Map<String, Object> params, Map<String, String> headers) {
         this.url = url;
         this.tag = tag;
         this.params = params;

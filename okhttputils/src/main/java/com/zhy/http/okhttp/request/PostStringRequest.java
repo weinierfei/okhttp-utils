@@ -12,13 +12,14 @@ import okhttp3.RequestBody;
  * Created by zhy on 15/12/14.
  */
 public class PostStringRequest extends OkHttpRequest {
-    private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
+//    private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("text/plain;charset=utf-8");
+    private static MediaType MEDIA_TYPE_PLAIN = MediaType.parse("application/json;charset=utf-8");
 
     private String content;
     private MediaType mediaType;
 
 
-    public PostStringRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, String content, MediaType mediaType) {
+    public PostStringRequest(String url, Object tag, Map<String, Object> params, Map<String, String> headers, String content, MediaType mediaType) {
         super(url, tag, params, headers);
         this.content = content;
         this.mediaType = mediaType;
