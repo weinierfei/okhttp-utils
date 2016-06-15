@@ -23,10 +23,12 @@ public abstract class FileCallBack extends Callback<File> {
     private String destFileName;
 
 
-    public FileCallBack(String destFileDir, String destFileName) {
+    public FileCallBack(String destFileDir, String destFileName)
+    {
         this.destFileDir = destFileDir;
         this.destFileName = destFileName;
     }
+
 
     @Override
     public File parseNetworkResponse(Response response, int id) throws Exception
@@ -41,26 +43,30 @@ public abstract class FileCallBack extends Callback<File> {
         byte[] buf = new byte[2048];
         int len = 0;
         FileOutputStream fos = null;
-        try {
+        try
+        {
             is = response.body().byteStream();
             final long total = response.body().contentLength();
 
             long sum = 0;
 
             File dir = new File(destFileDir);
-            if (!dir.exists()) {
+            if (!dir.exists())
+            {
                 dir.mkdirs();
             }
             File file = new File(dir, destFileName);
             fos = new FileOutputStream(file);
-            while ((len = is.read(buf)) != -1) {
+            while ((len = is.read(buf)) != -1)
+            {
                 sum += len;
                 fos.write(buf, 0, len);
                 final long finalSum = sum;
                 OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
                 {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
 
                         inProgress(finalSum * 1.0f / total,total,id);
                     }
@@ -70,11 +76,6 @@ public abstract class FileCallBack extends Callback<File> {
 
             return file;
 
-        } finally {
-            try {
-                if (is != null)
-                    is.close();
-            } catch (IOException e) {
         } finally
         {
             try
@@ -84,14 +85,14 @@ public abstract class FileCallBack extends Callback<File> {
             } catch (IOException e)
             {
             }
-            try {
-                if (fos != null)
-                    fos.close();
-            } catch (IOException e) {
+            try
+            {
+                if (fos != null) fos.close();
+            } catch (IOException e)
+            {
             }
 
         }
     }
-
 
 }

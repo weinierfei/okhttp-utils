@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
-
 /**
  * <pre>
  *     OkHttpClient client = new OkHttpClient.Builder()
@@ -30,9 +29,9 @@ import okhttp3.HttpUrl;
  *             .build();
  *
  * </pre>
- * <p>
+ * <p/>
  * from http://stackoverflow.com/questions/25461792/persistent-cookie-store-using-okhttp-2-on-android
- * <p>
+ * <p/>
  * <br/>
  * A persistent cookie store which implements the Apache HttpClient CookieStore interface.
  * Cookies are stored and will persist on the user's device between application sessions since they
@@ -40,51 +39,51 @@ import okhttp3.HttpUrl;
  * designed to be used with AsyncHttpClient#setCookieStore, but can also be used with a
  * regular old apache HttpClient/HttpContext if you prefer.
  */
-public class PersistentCookieStore implements CookieStore {
+public class PersistentCookieStore implements CookieStore
+{
+
+    private static final String LOG_TAG = "PersistentCookieStore";
+    private static final String COOKIE_PREFS = "CookiePrefsFile";
+    private static final String COOKIE_NAME_PREFIX = "cookie_";
+
+    private final HashMap<String, ConcurrentHashMap<String, Cookie>> cookies;
+    private final SharedPreferences cookiePrefs;
+
+    /**
+     * Construct a persistent cookie store.
+     *
+     * @param context Context to attach cookie store to
+     */
+    public PersistentCookieStore(Context context)
     {
+        cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
+        cookies = new HashMap<String, ConcurrentHashMap<String, Cookie>>();
 
-        private static final String LOG_TAG = "PersistentCookieStore";
-        private static final String COOKIE_PREFS = "CookiePrefsFile";
-        private static final String COOKIE_NAME_PREFIX = "cookie_";
-
-        private final HashMap<String, ConcurrentHashMap<String, Cookie>> cookies;
-        private final SharedPreferences cookiePrefs;
-
-        /**
-         * Construct a persistent cookie store.
-         *
-         * @param context Context to attach cookie store to
-         */
-        public PersistentCookieStore(Context context)
+        // Load any previously stored cookies into the store
+        Map<String, ?> prefsMap = cookiePrefs.getAll();
+        for (Map.Entry<String, ?> entry : prefsMap.entrySet())
         {
-            cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
-            cookies = new HashMap<String, ConcurrentHashMap<String, Cookie>>();
-
-            // Load any previously stored cookies into the store
-            Map<String, ?> prefsMap = cookiePrefs.getAll();
-            for (Map.Entry<String, ?> entry : prefsMap.entrySet())
+            if (((String) entry.getValue()) != null && !((String) entry.getValue()).startsWith(COOKIE_NAME_PREFIX))
             {
-                if (((String) entry.getValue()) != null && !((String) entry.getValue()).startsWith(COOKIE_NAME_PREFIX))
+                String[] cookieNames = TextUtils.split((String) entry.getValue(), ",");
+                for (String name : cookieNames)
                 {
-                    String[] cookieNames = TextUtils.split((String) entry.getValue(), ",");
-                    for (String name : cookieNames)
+                    String encodedCookie = cookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
+                    if (encodedCookie != null)
                     {
-                        String encodedCookie = cookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
-                        if (encodedCookie != null)
+                        Cookie decodedCookie = decodeCookie(encodedCookie);
+                        if (decodedCookie != null)
                         {
-                            Cookie decodedCookie = decodeCookie(encodedCookie);
-                            if (decodedCookie != null)
-                            {
-                                if (!cookies.containsKey(entry.getKey()))
-                                    cookies.put(entry.getKey(), new ConcurrentHashMap<String, Cookie>());
-                                cookies.get(entry.getKey()).put(name, decodedCookie);
-                            }
+                            if (!cookies.containsKey(entry.getKey()))
+                                cookies.put(entry.getKey(), new ConcurrentHashMap<String, Cookie>());
+                            cookies.get(entry.getKey()).put(name, decodedCookie);
                         }
                     }
-
                 }
+
             }
         }
+    }
 
     protected void add(HttpUrl uri, Cookie cookie)
     {

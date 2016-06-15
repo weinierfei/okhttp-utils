@@ -1,5 +1,4 @@
 package com.zhy.http.okhttp.builder;
-import com.zhy.http.okhttp.callback.StringCallback;
 import android.net.Uri;
 
 import com.zhy.http.okhttp.request.GetRequest;
@@ -9,7 +8,6 @@ import com.zhy.http.okhttp.utils.ParamUtil;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -23,7 +21,7 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
 //            url = appendParams(url, params);
             url = ParamUtil.appendParams(url,params);
         }
-        return new GetRequest(url, tag, params, headers).build();
+        return new GetRequest(url, tag, params, headers,id).build();
     }
 
 
@@ -39,7 +37,7 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
         while (iterator.hasNext())
         {
             String key = iterator.next();
-            builder.appendQueryParameter(key, params.get(key));
+            builder.appendQueryParameter(key, String.valueOf(params.get(key)));
         }
         return builder.build().toString();
     }
