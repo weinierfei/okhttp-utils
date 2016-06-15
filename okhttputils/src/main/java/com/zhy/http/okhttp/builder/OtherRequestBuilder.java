@@ -3,15 +3,13 @@ package com.zhy.http.okhttp.builder;
 import com.zhy.http.okhttp.request.OtherRequest;
 import com.zhy.http.okhttp.request.RequestCall;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import okhttp3.RequestBody;
 
 /**
  * DELETE、PUT、PATCH等其他方法
  */
-public class OtherRequestBuilder extends OkHttpRequestBuilder {
+public class OtherRequestBuilder extends OkHttpRequestBuilder<OtherRequestBuilder>
+{
     private RequestBody requestBody;
     private String method;
     private String content;
@@ -21,8 +19,9 @@ public class OtherRequestBuilder extends OkHttpRequestBuilder {
     }
 
     @Override
-    public RequestCall build() {
-        return new OtherRequest(requestBody, content, method, url, tag, params, headers).build();
+    public RequestCall build()
+    {
+        return new OtherRequest(requestBody, content, method, url, tag, params, headers,id).build();
     }
 
     public OtherRequestBuilder requestBody(RequestBody requestBody) {

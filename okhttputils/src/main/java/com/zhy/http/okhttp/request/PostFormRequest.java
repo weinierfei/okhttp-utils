@@ -5,8 +5,10 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.Callback;
 
+import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +26,9 @@ public class PostFormRequest extends OkHttpRequest {
 
     private List<PostFormBuilder.FileInput> files;
 
-    public PostFormRequest(String url, Object tag, Map<String, Object> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files) {
-        super(url, tag, params, headers);
+    public PostFormRequest(String url, Object tag, Map<String, Object> params, Map<String, String> headers, List<PostFormBuilder.FileInput> files,int id)
+    {
+        super(url, tag, params, headers,id);
         this.files = files;
     }
 
@@ -56,10 +59,12 @@ public class PostFormRequest extends OkHttpRequest {
             @Override
             public void onRequestProgress(final long bytesWritten, final long contentLength) {
 
-                OkHttpUtils.getInstance().getDelivery().post(new Runnable() {
+                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
+                {
                     @Override
-                    public void run() {
-                        callback.inProgress(bytesWritten * 1.0f / contentLength);
+                    public void run()
+                    {
+                        callback.inProgress(bytesWritten * 1.0f / contentLength,contentLength,id);
                     }
                 });
 
@@ -75,8 +80,17 @@ public class PostFormRequest extends OkHttpRequest {
 
     private String guessMimeType(String path) {
         FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String contentTypeFor = fileNameMap.getContentTypeFor(path);
-        if (contentTypeFor == null) {
+
+        String contentTypeFor = null;
+        try
+        {
+            contentTypeFor = fileNameMap.getContentTypeFor(URLEncoder.encode(path, "UTF-8"));
+        } catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+        if (contentTypeFor == null)
+        {
             contentTypeFor = "application/octet-stream";
         }
         return contentTypeFor;
