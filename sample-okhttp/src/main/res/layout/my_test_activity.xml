@@ -32,5 +32,17 @@
         android:layout_gravity="center_horizontal"
         android:text="download"/>
 
+    <Button
+        android:id="@+id/btn_base64"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="base64"/>
+    <Button
+        android:id="@+id/btn_upload_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="upload"/>
 
 </LinearLayout>

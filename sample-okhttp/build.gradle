@@ -27,9 +27,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
-//    compile project(':okhttputils')
-    compile 'com.zhy:okhttputils:2.6.1'
+        compile project(':okhttputils')
+//    compile 'com.zhy:okhttputils:2.6.1'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
     compile 'com.github.franmontiel:PersistentCookieJar:v0.9.3'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
