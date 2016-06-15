@@ -1,7 +1,6 @@
 package com.zhy.http.okhttp.callback;
 
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.utils.L;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,21 +22,21 @@ public abstract class FileCallBack extends Callback<File> {
      */
     private String destFileName;
 
-    public abstract void inProgress(float progress);
 
     public FileCallBack(String destFileDir, String destFileName) {
         this.destFileDir = destFileDir;
         this.destFileName = destFileName;
     }
 
-
     @Override
-    public File parseNetworkResponse(Response response) throws Exception {
-        return saveFile(response);
+    public File parseNetworkResponse(Response response, int id) throws Exception
+    {
+        return saveFile(response,id);
     }
 
 
-    public File saveFile(Response response) throws IOException {
+    public File saveFile(Response response,final int id) throws IOException
+    {
         InputStream is = null;
         byte[] buf = new byte[2048];
         int len = 0;
@@ -45,9 +44,8 @@ public abstract class FileCallBack extends Callback<File> {
         try {
             is = response.body().byteStream();
             final long total = response.body().contentLength();
-            long sum = 0;
 
-            L.e(total + "");
+            long sum = 0;
 
             File dir = new File(destFileDir);
             if (!dir.exists()) {
@@ -59,11 +57,12 @@ public abstract class FileCallBack extends Callback<File> {
                 sum += len;
                 fos.write(buf, 0, len);
                 final long finalSum = sum;
-                OkHttpUtils.getInstance().getDelivery().post(new Runnable() {
+                OkHttpUtils.getInstance().getDelivery().execute(new Runnable()
+                {
                     @Override
                     public void run() {
 
-                        inProgress(finalSum * 1.0f / total);
+                        inProgress(finalSum * 1.0f / total,total,id);
                     }
                 });
             }
@@ -76,6 +75,14 @@ public abstract class FileCallBack extends Callback<File> {
                 if (is != null)
                     is.close();
             } catch (IOException e) {
+        } finally
+        {
+            try
+            {
+                response.body().close();
+                if (is != null) is.close();
+            } catch (IOException e)
+            {
             }
             try {
                 if (fos != null)

@@ -4,15 +4,15 @@ import com.zhy.http.okhttp.request.PostFileRequest;
 import com.zhy.http.okhttp.request.RequestCall;
 
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import okhttp3.MediaType;
 
 /**
  * Created by zhy on 15/12/14.
  */
-public class PostFileBuilder extends OkHttpRequestBuilder {
+
+public class PostFileBuilder extends OkHttpRequestBuilder<PostFileBuilder>
+{
     private File file;
     private MediaType mediaType;
 
@@ -27,10 +27,6 @@ public class PostFileBuilder extends OkHttpRequestBuilder {
         return this;
     }
 
-    @Override
-    public RequestCall build() {
-        return new PostFileRequest(url, tag, params, headers, file, mediaType).build();
-    }
 
     @Override
     public PostFileBuilder url(String url) {
@@ -58,4 +54,11 @@ public class PostFileBuilder extends OkHttpRequestBuilder {
         headers.put(key, val);
         return this;
     }
+
+    public RequestCall build()
+    {
+        return new PostFileRequest(url, tag, params, headers, file, mediaType,id).build();
+    }
+
+
 }
